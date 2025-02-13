@@ -1,0 +1,195 @@
+<template>
+
+    <template if:true={isDeletingStudents}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">学生を削除</h2>
+                </header>
+    
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium slds-text-align_center">
+                    <p>この学生の削除を実行しますか?</p>
+                </div>
+    
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button label="キャンセル" onclick={closeDeleteModal}></lightning-button>
+                    <lightning-button label="削除" variant="brand" onclick={deleteSelectedStudent}></lightning-button>
+                </footer>
+            </div>
+        </section>
+    
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    
+
+    <!-- View Student Details Dynamically -->
+    <template if:true={isViewStudentDetail}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <c-Lwc_-Detail-Student student-id={selectedStudentId} onchildmessage={handleChildEvent}></c-Lwc_-Detail-Student>
+            <!-- <lightning-button label="TURN OFF" onclick={closeViewDetail}></lightning-button> -->
+        </section>
+        <!-- Modal Backdrop -->
+        <div class="slds-backdrop slds-backdrop_open">
+        </div>      
+    </template>
+
+    <template if:true={isCreatingStudent}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <c-Lwc_-Create-Student student-id={selectedStudentId} onchildmessage={handleChildEvent}></c-Lwc_-Create-Student>
+            <!-- <lightning-button label="TURN OFF" onclick={closeViewDetail}></lightning-button> -->
+        </section>
+        <!-- Modal Backdrop -->
+        <div class="slds-backdrop slds-backdrop_open">
+        </div>      
+    </template>
+
+    <template if:true={isUpdatingStudents}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <c-Lwc_-Update-Student student-id={selectedStudentId} onchildmessage={handleChildEvent}></c-Lwc_-Update-Student>
+            <!-- <lightning-button label="TURN OFF" onclick={closeViewDetail}></lightning-button> -->
+        </section>
+        <!-- Modal Backdrop -->
+        <div class="slds-backdrop slds-backdrop_open">
+        </div>      
+    </template>
+
+    <lightning-card title="Student Records">
+       
+        <div class="slds-box slds-box_xx-small search-filters-container">
+            <div class="slds-grid slds-gutters">
+                <!-- Student Code Filter -->
+                <div class="slds-col slds-size_1-of-6">
+                    <lightning-input label="学生コード" name="searchStudentCode" value={searchStudentCode} onchange={handleChange}></lightning-input>
+                </div>
+        
+                <!-- First Name Filter -->
+                <div class="slds-col slds-size_1-of-6">
+                    <lightning-input label="名" name="searchName" value={searchName} onchange={handleChange}></lightning-input>
+                </div>
+        
+                <!-- Birthdate Filter -->
+                <div class="slds-col slds-size_1-of-6">
+                    <lightning-input label="生年月日" type="date" name="selectedBirthday" value={selectedBirthday} onchange={handleChange}></lightning-input>
+                </div>
+        
+                <!-- Class Filter -->
+                <div class="slds-col slds-size_1-of-6">
+                    <lightning-combobox label="クラス" value={selectedClass} name="selectedClass"
+                        options={classOptions} onchange={handleChange}></lightning-combobox>
+                </div>
+        
+                <!-- Gender Filter -->
+                <div class="slds-col slds-size_1-of-6">
+                    <lightning-combobox label="性別" value={selectedGender} name="selectedGender"
+                        options={genderOptions} onchange={handleChange}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-6"></div>
+            </div>
+        </div>
+        
+
+        <!-- Functional buttons -->
+        <lightning-button label="検索" variant="brand" icon-name="utility:search" class="slds-m-left_x-small" onclick={handleSearch}></lightning-button>
+        <lightning-button label="作成" variant="neutral" icon-name="utility:add" class="slds-m-left_x-small" onclick={openCreateStudent}></lightning-button>
+        <lightning-button label="クリア" variant="neutral" icon-name="utility:close" disabled={isClearDisable} class="slds-m-left_x-small" onclick={clearInputs}></lightning-button>
+        <lightning-button label="削除" variant="destructive" icon-name="utility:delete" class="slds-m-left_x-small" disabled="isDeleteDisabled" onclick={openDeleteModal}></lightning-button>
+
+        <!-- INFORMATION TABLE -->
+        <div class="slds-table_edit_container">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col">
+                            <!-- <lightning-input type="checkbox" name="selectAll" checked={selectAll} onchange={toggleSelectAll}></lightning-input> -->
+                            <lightning-input type="checkbox" 
+                                            name="selectAll" 
+                                            checked={selectAll} 
+                                            onchange={toggleSelectAll}>
+                            </lightning-input>
+
+                        </th>
+                        <th scope="col"><div class="slds-truncate">学生コード</div></th>
+                        <th scope="col"><div class="slds-truncate">姓</div></th>
+                        <th scope="col"><div class="slds-truncate">名</div></th>
+                        <th scope="col"><div class="slds-truncate">クラス</div></th>
+                        <th scope="col"><div class="slds-truncate">性別</div></th>
+                        <th scope="col"><div class="slds-truncate">生年月日</div></th>
+                        <th scope="col"><div class="slds-truncate">アクション</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template if:true={display_students}>
+                    <template for:each={display_students} for:item="student">
+                        <tr key={student.Id}>
+                            <td>
+                                <lightning-input type="checkbox" checked={student.isSelected} value={student.Id} onchange={handleStudentSelection}></lightning-input>
+                            </td>
+                            <td><div class="slds-truncate">{student.StudentCode__c}</div></td>
+                            <td><div class="slds-truncate">{student.Firstname__c}</div></td>
+                            <td><div class="slds-truncate">{student.Lastname__c}</div></td>
+                            <td><div class="slds-truncate">{student.Class_look__c}</div></td>
+                            <td><div class="slds-truncate">{student.Gender__c}</div></td>
+                            <td><div class="slds-truncate">{student.Birthday__c}</div></td>
+                            <td>
+                                <lightning-button-icon icon-name="utility:preview" alternative-text="View" size="small" value={student.Id} onclick={viewDetail}></lightning-button-icon>
+                                <lightning-button-icon icon-name="utility:edit" alternative-text="Edit" size="small" value={student.Id} onclick={updateStudent}></lightning-button-icon>
+                                <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" size="small" value={student.Id} onclick={deleteSingleStudent}></lightning-button-icon>
+                            </td>
+                        </tr>
+                    </template>
+                </template>
+                </tbody>
+            </table>
+            <h5>Selected: {selectedStudents.length} / {students.length}</h5>
+        </div>
+
+        <div class="pagination">
+            <!-- First Page Button -->
+            <lightning-button 
+                label="First" 
+                onclick={goToFirstPage}
+                disabled={isFirstPageDisable}
+                >
+            </lightning-button>
+            
+            <!-- Previous Page Button -->
+            <lightning-button 
+                label="Previous" 
+                onclick={previousPage}
+                 disabled={isFirstPageDisable}
+             >
+            </lightning-button>
+    
+            <!-- Dynamic Page Buttons -->
+            <template for:each={visiblePages} for:item="page">
+                <lightning-button 
+                    key={page} 
+                    label={page} 
+                    value={page}
+                    class={page.buttonClass}
+                    onclick={goToPage}>
+                </lightning-button>
+            </template>
+    
+            <!-- Next Page Button -->
+            <lightning-button 
+                label="Next" 
+                onclick={nextPage} 
+                disabled={isLastPageDisable}
+             >
+            </lightning-button>
+        
+            <!-- Last Page Button -->
+            <lightning-button 
+                label="Last" 
+                onclick={goToLastPage} 
+                 disabled={isLastPageDisable}
+          >
+            </lightning-button>
+            </div>
+    
+    </lightning-card>
+</template>

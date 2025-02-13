@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+    <aura:registerEvent name="ViewDetailComponentEvent" type="c:ViewDetailComponentEvent"/>
+                    <ui:button label="Fire Event" press="{!c.fireComponentEvent}"/>
+                    <lightning:button label="CREATE STUDENT VIA EVENT" onclick="{!c.CreateStudentHandler}"/>
+                  
+        
+       
+</aura:component>

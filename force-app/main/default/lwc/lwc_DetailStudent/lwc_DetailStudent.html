@@ -1,0 +1,87 @@
+<template>
+    <!-- <template if:true={isVisible}> -->
+        <!-- <section role="dialog" class="slds-modal slds-fade-in-open"> -->
+            <div class="slds-modal__container">
+                <!-- Header -->
+                <header class="slds-modal__header">
+                    <lightning-button-icon icon-name="utility:close" 
+                                           variant="bare" 
+                                           class="slds-modal__close custom-modal-close"
+                                           alternative-text="Close"
+                                           onclick={sendCloseMessageEvent}></lightning-button-icon>
+                    <h2 class="slds-text-heading_medium">学生の詳細</h2>
+                </header>
+
+                <!-- Loading Spinner -->
+                <template if:true={isLoading}>
+                    <div class="spinner-overlay">
+                        <lightning-spinner size="medium" alternative-text="Loading..."></lightning-spinner>
+                    </div>
+                </template>
+
+                <!-- Content -->
+<div class="slds-modal__content slds-p-around_medium">
+    <template if:true={student}>
+        <div class="slds-card__body slds-grid slds-wrap">
+            <!-- Left Column -->
+            <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">学生コード:</p>
+                        <p class="slds-text-body_regular">{student.StudentCode__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">姓:</p>
+                        <p class="slds-text-body_regular">{student.Firstname__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">名:</p>
+                        <p class="slds-text-body_regular">{student.Lastname__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">生年月日:</p>
+                        <p class="slds-text-body_regular">{student.Birthday__c}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">性別:</p>
+                        <p class="slds-text-body_regular">{student.Gender__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">クラス:</p>
+                        <p class="slds-text-body_regular">{student.Class_look__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <p class="slds-text-title">在学中:</p>
+                        <p class="slds-text-body_regular">{student.LearningStatus__c}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template if:false={student}>
+        <div class="slds-p-around_medium">
+            <p>No student data available.</p>
+        </div>
+    </template>
+</div>
+
+
+                <!-- Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning-button label="閉しる" 
+                                      variant="brand" 
+                                      class="custom-button" 
+                                      onclick={closeModal}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <!-- <div class="slds-backdrop slds-backdrop_open"></div> -->
+    <!-- </template> -->
+</template>

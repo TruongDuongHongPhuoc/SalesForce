@@ -1,0 +1,58 @@
+<template>
+    <lightning-card title="Student's Academic Results" icon-name="standard:education">
+        <div class="slds-m-around_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-3">
+                    <p>合計クレジット: 21</p>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <p>平均学分績点: 5.45</p>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-combobox
+                        name="semesterSelect"
+                        value={selectedSemester}
+                        placeholder="全て"
+                        options={semesterOptions}
+                        onchange={handleSemesterChange}>
+                    </lightning-combobox>
+                </div>
+            </div>
+            <h2>学習成果</h2>
+            <template for:each={semesters} for:item="semester">
+                <div key={semester.id}>
+                    <h3>学期{semester.id}, {semester.year}</h3>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>
+                            <tr>
+                                <th>科目コード</th>
+                                <th>科目名</th>
+                                <th>クレジット</th>
+                                <th>進捗点</th>
+                                <th>実用点</th>
+                                <th>中間試験点</th>
+                                <th>期末試験点</th>
+                                <th>科目平均点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={semester.courses} for:item="course">
+                                <tr key={course.code}>
+                                    <td>{course.code}</td>
+                                    <td>{course.name}</td>
+                                    <td>{course.credits}</td>
+                                    <td>{course.attendance}</td>
+                                    <td>{course.practical}</td>
+                                    <td>{course.midterm}</td>
+                                    <td>{course.final}</td>
+                                    <td>{course.average}</td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <p>学期平均: {semester.average}</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

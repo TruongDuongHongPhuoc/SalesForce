@@ -1,0 +1,5 @@
+<!-- ViewDetailComponentEvent.evt -->
+<aura:event type="COMPONENT" description="Component event template">
+    <aura:attribute name="studentid" type="String" />
+    <aura:attribute name="message" type="String" />
+</aura:event>

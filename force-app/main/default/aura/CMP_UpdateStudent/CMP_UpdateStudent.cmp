@@ -1,0 +1,73 @@
+<aura:component controller="CMP_UpdateStudentCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+    <!-- Student ID for Update -->
+    <aura:attribute name="studentId" type="String" default="a00WU00000V8KMIYA3" />
+
+    <!-- Student Attributes -->
+    <aura:attribute name="firstName" type="String" />
+    <aura:attribute name="lastName" type="String" />
+    <aura:attribute name="birthday" type="Date" />
+    <aura:attribute name="genderOptions" type="List" default="[]" />
+    <aura:attribute name="gender" type="String" />
+    <aura:attribute name="classOptions" type="List" default="[]" />
+    <aura:attribute name="selectedClass" type="String" />
+    <aura:attribute name="learningStatusOptions" type="List" default="[]" />
+    <aura:attribute name="learningStatus" type="String" />
+
+    <!-- Event Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.studentId}" action="{!c.rerenderDetails}" />
+    <aura:registerEvent name="CloseModalEvent" type="c:CloseModalEvent"/>
+    <!-- UI -->
+    <div class="slds-modal__container">
+        <!-- Modal Header -->
+        <header class="slds-modal__header">
+            <!-- <lightning:buttonIcon iconName="utility:close" variant="bare" class="slds-modal__close" onclick="{!c.closeUpdateStudent}" alternativeText="Close" /> -->
+            <lightning:buttonIcon 
+        iconName="utility:close" 
+        variant="bare" 
+        class="slds-modal__close custom-modal-close"
+        alternativeText="Close" 
+        onclick="{!c.fireCloseModalEvent}" />
+            <h2 class="slds-text-heading_medium">学生を編集</h2>
+        </header>
+
+        <!-- Modal Body -->
+        <div class="slds-modal__content slds-p-around_medium">
+            
+            <lightning:input label="姓" value="{!v.firstName}" required="true" aura:id="firstNameField" />
+            <lightning:input label="名" value="{!v.lastName}" required="true" aura:id="lastNameField" />
+            <lightning:input label="生年月日" type="date" value="{!v.birthday}" required="true" aura:id="birthdayField" />
+
+            <lightning:combobox 
+            label="性別" 
+            value="{!v.gender}" 
+            options="{!v.genderOptions}" 
+            aura:id="genderField"
+           />
+
+            <lightning:combobox 
+            required="true"
+            label="クラス" 
+            value="{!v.selectedClass}" 
+            options="{!v.classOptions}" 
+            aura:id="classField"
+             />
+
+             <lightning:combobox 
+            required="true"
+            label="スターテス" 
+            value="{!v.learningStatus}" 
+            options="{!v.learningStatusOptions}" 
+            aura:id="learningStatusField"
+             />
+</div>
+
+    <!-- Modal Footer -->
+    <footer class="slds-modal__footer">
+      <!-- <lightning:button label="Cancel" onclick="{!c.closeCreateStudent}" /> -->
+      <lightning:button label="キャンセル" variant="brand" class="custom-button" onclick="{!c.fireCloseModalEvent}" />
+      <lightning:button label="保存" variant="brand" onclick="{!c.handleUpdate}"/>
+  </footer>
+    </div>
+    
+</aura:component>

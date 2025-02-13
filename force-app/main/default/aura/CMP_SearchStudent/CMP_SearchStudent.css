@@ -1,0 +1,11 @@
+.THIS .search-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Adds space between input fields */
+}
+
+.THIS .search-input-container {
+    flex: 1 1 200px; /* Flex-grow, flex-shrink, and base size */
+    min-width: 200px; /* Ensures input fields don’t become too small */
+    max-width: 250px;
+}

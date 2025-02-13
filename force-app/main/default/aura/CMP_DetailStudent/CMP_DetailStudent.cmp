@@ -1,0 +1,72 @@
+<aura:component controller="CMP_DetailStudentCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+    <!-- Attributes -->
+    <aura:attribute name="studentId" type="String" default="a00WU00000V8KMIYA3" />
+    <aura:attribute name="student" type="Student__c" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" />
+    <aura:attribute name="isVisible" type="Boolean" default="false" />
+
+    <!-- Event Handler -->
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:registerEvent name="CloseModalEvent" type="c:CloseModalEvent"/>
+
+    <div class="slds-modal__container">
+        <!-- Modal Header -->
+        <header class="slds-modal__header">
+            <!-- <lightning:buttonIcon iconName="utility:close" variant="bare" class="slds-modal__close" onclick="{!c.closeStudentDetail}" alternativeText="Close" /> -->
+            <lightning:buttonIcon 
+            iconName="utility:close" 
+            variant="bare" 
+            class="slds-modal__close custom-modal-close"
+            alternativeText="Close" 
+            onclick="{!c.fireCloseModalEvent}" />
+            <h2 class="slds-text-heading_medium">学生の詳細</h2>
+        </header>
+        <!-- Loading Spinner -->
+        <aura:if isTrue="{!v.isLoading}">
+            <div class="spinner-overlay">
+                <lightning:spinner size="medium" alternativeText="Loading..." />
+            </div>
+        </aura:if>
+        <div class="slds-modal__content slds-p-around_medium">
+        <!-- Content Section - Display student details if visible -->
+        <aura:if isTrue="{!v.isVisible}">
+            <aura:set attribute="else">
+                <!-- Two-column layout -->
+                <aura:if isTrue="{!not(empty(v.student))}">
+                    <div class="slds-card__body slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                            <p><b>学生コード:</b></p>
+                            <p>{!v.student.StudentCode__c}</p>
+                            <p><b>姓:</b></p>
+                            <p>{!v.student.FirstName__c}</p>
+                            <p><b>名:</b></p>
+                            <p>{!v.student.Lastname__c}</p>
+                            <p><b>生年月日:</b></p>
+                            <p>{!v.student.Birthday__c}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                            <p><b>性別:</b></p>
+                            <p>{!v.student.Gender__c}</p>
+                            <p><b>クラス:</b></p>
+                            <p>{!v.student.Class_look__c}</p>
+                            <p><b>在学中:</b></p>
+                            <p>{!v.student.LearningStatus__c}</p>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!empty(v.student)}">
+                    <div class="slds-p-around_medium">
+                        <p>No student data available.</p>
+                    </div>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+        </div>
+         <!-- Modal Footer -->
+         <footer class="slds-modal__footer">
+            <!-- <lightning:button label="Cancel" onclick="{!c.closeCreateStudent}" /> -->
+            <lightning:button label="閉しる" variant="brand" class="custom-button" onclick="{!c.fireCloseModalEvent}" />
+        </footer>
+    </div>
+</aura:component>

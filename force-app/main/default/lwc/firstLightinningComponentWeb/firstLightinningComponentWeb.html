@@ -1,0 +1,140 @@
+<template>
+    <lightning-card title="Student Information">
+        <template if:true={students}>
+            <div class="slds-box slds-box_xx-small">
+                <h3>Students</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Student Code</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={students} for:item="student">
+                            <tr key={student.Id}>
+                                <td>{student.Name}</td>
+                                <td>{student.StudentCode__c}</td>
+                                <td>{student.FirstName__c}</td>
+                                <td>{student.LastName__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template if:true={subjects}>
+            <div class="slds-box slds-box_xx-small">
+                <h3>Subjects</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>subject id</th>
+                            <th>Subject Code</th>
+                            <th>Subject Name</th>
+                            <th>Subject Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={subjects} for:item="subject">
+                            <tr key={subject.Id}>
+                                <td>{subject.Id}</td>
+                                <td>{subject.SubjectCode__c}</td>
+                                <td>{subject.Name}</td>
+                                <td>{subject.SubjectType__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template if:true={subjectScores}>
+            <div class="slds-box slds-box_xx-small">
+                <h3>Subject Scores</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>subject score id</th>
+                            <th>Subject</th>
+                            <th>Student</th>
+                            <th>Status</th>
+                            <th>Average Score</th>
+                            <th>Semester</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={subjectScores} for:item="score">
+                            <tr key={score.Id}>
+                                <td>{score.Subject_look__r.Id}</td>
+                                <td>{score.Subject_look__r.Name}</td>
+                                <td>{score.Student_look__r.Name}</td>
+                                <td>{score.Status__c}</td>
+                                <td>{score.AverageScore__c}</td>
+                                <td>{score.Semester_look__r.Name}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+      <template if:true={scores}>
+            <div class="slds-box slds-box_xx-small">
+                <h3>Score__c</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>score</th>
+                            <th>examp type</th>
+                            <th>SubjectScore_look__c</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={scores} for:item="score">
+                            <tr key={score.Id}>
+                                <td>{score.Score__c}</td>
+                                <td>{score.ExamType__c}</td>
+                                <td>{score.SubjectScore_look__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        
+        <template if:true={semesters}>
+            <div class="slds-box slds-box_xx-small">
+                <h3>Semesters</h3>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>semester id</th>
+                            <th>Semester Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={semesters} for:item="semester">
+                            <tr key={semester.Id}>
+                                <td>{semester.Id}</td>
+                                <td>{semester.Name}</td>
+                                <td>{semester.StartDate__c}</td>
+                                <td>{semester.EndDate__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        
+
+
+    </lightning-card>
+</template>

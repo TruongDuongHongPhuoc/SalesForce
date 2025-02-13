@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Student Information">
+        <template if:true={data}>
+            <div for:each={data} for:item="semester" key={semester.Id}>
+                <div key={semester.Id}>
+                    <h3>{semester.Name}</h3>
+                    <p>Start Date: {semester.StartDate__c}</p>
+                    <p>End Date: {semester.EndDate__c}</p>
+                    <template for:each={semester.SMT_look__r} for:item="smt">
+                        <div key={smt.Id}>
+                            <h4>Subject: {smt.Subject_look__r.Name}</h4>
+                            <p>Status: {smt.Status__c}</p>
+                            <p>Average Score: {smt.AverageScore__c}</p>
+                            <template for:each={smt.SBJC_look__r} for:item="sbjc">
+                                <div key={sbjc.Id}>
+                                    <p>Exam Type: {sbjc.ExamType__c}</p>
+                                    <p>Score: {sbjc.Score__c}</p>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+        <template if:true={error}>
+            <p>Error: {error.message}</p>
+        </template>
+    </lightning-card>
+</template>

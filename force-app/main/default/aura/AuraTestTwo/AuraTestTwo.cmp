@@ -1,0 +1,10 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name="receivedMessage" type="String" />
+   
+    <!-- Change from event="" to name="" -->
+    <aura:handler name="ViewDetailComponentEvent" event="c:ViewDetailComponentEvent" action="{!c.handleComponentEvent}"/>z
+    <aura:handler name="init" value="{!this}" action="{!c.handleComponentEvent}" />
+    <c:AuraTestOne />
+    <p>Message from child: {!v.receivedMessage}</p>
+  
+</aura:component>

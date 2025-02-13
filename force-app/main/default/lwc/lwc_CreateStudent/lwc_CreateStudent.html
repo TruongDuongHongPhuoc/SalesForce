@@ -1,0 +1,76 @@
+<template>
+    <div class="slds-modal__container">
+        <!-- Modal Header -->
+        <header class="slds-modal__header">
+            <!-- <lightning:buttonIcon iconName="utility:close" variant="bare" class="slds-modal__close" onclick="{!c.fireCloseModalEvent}"  alternativeText="Close" /> -->
+            <lightning-button-icon 
+            icon-name="utility:close" 
+            variant="bare" 
+            class="slds-modal__close custom-modal-close"
+            alternative-text="Close" 
+            onclick={sendCloseMessageEvent}>
+            </lightning-button-icon>
+        
+    
+            <h2 class="slds-text-heading_medium">新規学生</h2>
+        </header>
+    
+        <!-- INPUT  -->
+        <div class="slds-modal__content slds-p-around_medium">
+            
+            <lightning-input 
+                label="姓" 
+                value={firstName} 
+                name="firstName" 
+                onchange={handleChange}
+            ></lightning-input>
+            
+            <lightning-input 
+                label="名" 
+                value={lastName} 
+                name="lastName" 
+                required
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-input 
+                label="生年月日" 
+                type="date" 
+                value={birthday} 
+                name="birthday" 
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-combobox 
+                label="性別" 
+                value={gender} 
+                options={genderOptions} 
+                name="gender" 
+                onchange={handleChange}
+            ></lightning-combobox>
+
+            <lightning-combobox 
+                label="クラス" 
+                value={selectedClass} 
+                options={classOptions} 
+                name="selectedClass" 
+                required
+                onchange={handleChange}
+            ></lightning-combobox>
+
+            <lightning-combobox 
+                label="スターテス" 
+                value={learningStatus} 
+                options={learningStatusOptions} 
+                name="learningStatus" 
+                required
+                onchange={handleChange}
+            ></lightning-combobox>
+
+        </div>
+            <footer class="slds-modal__footer">
+                    <lightning-button label="キャンセル" variant="brand" onclick={sendCloseMessageEvent} class="custom-button" ></lightning-button>
+                    <lightning-button label="保存" onclick={handleSave} variant="brand"></lightning-button>
+            </footer>
+            </div>   
+</template>
