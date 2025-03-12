@@ -95,7 +95,7 @@
         <lightning-button label="検索" variant="brand" icon-name="utility:search" class="slds-m-left_x-small" onclick={handleSearch}></lightning-button>
         <lightning-button label="作成" variant="neutral" icon-name="utility:add" class="slds-m-left_x-small" onclick={openCreateStudent}></lightning-button>
         <lightning-button label="クリア" variant="neutral" icon-name="utility:close" disabled={isClearDisable} class="slds-m-left_x-small" onclick={clearInputs}></lightning-button>
-        <lightning-button label="削除" variant="destructive" icon-name="utility:delete" class="slds-m-left_x-small" disabled="isDeleteDisabled" onclick={openDeleteModal}></lightning-button>
+        <lightning-button label="削除" variant="destructive" icon-name="utility:delete" class="slds-m-left_x-small" disabled={isDeleteDisabled} onclick={openDeleteModal}></lightning-button>
 
         <!-- INFORMATION TABLE -->
         <div class="slds-table_edit_container">
@@ -106,6 +106,7 @@
                             <!-- <lightning-input type="checkbox" name="selectAll" checked={selectAll} onchange={toggleSelectAll}></lightning-input> -->
                             <lightning-input type="checkbox" 
                                             name="selectAll" 
+                                            data-field = "checkBoxAll"
                                             checked={selectAll} 
                                             onchange={toggleSelectAll}>
                             </lightning-input>
@@ -130,7 +131,7 @@
                             <td><div class="slds-truncate">{student.StudentCode__c}</div></td>
                             <td><div class="slds-truncate">{student.Firstname__c}</div></td>
                             <td><div class="slds-truncate">{student.Lastname__c}</div></td>
-                            <td><div class="slds-truncate">{student.Class_look__c}</div></td>
+                            <td><div class="slds-truncate">{student.Class_look__r.Name}</div></td>
                             <td><div class="slds-truncate">{student.Gender__c}</div></td>
                             <td><div class="slds-truncate">{student.Birthday__c}</div></td>
                             <td>
@@ -166,10 +167,11 @@
             <!-- Dynamic Page Buttons -->
             <template for:each={visiblePages} for:item="page">
                 <lightning-button 
-                    key={page} 
-                    label={page} 
-                    value={page}
-                    class={page.buttonClass}
+                    key={page.page} 
+                    label={page.page} 
+                    value={page.page}
+                    class={page.page.buttonClass}
+                    disabled={page.isDisable}
                     onclick={goToPage}>
                 </lightning-button>
             </template>

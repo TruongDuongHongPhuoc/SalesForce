@@ -39,7 +39,7 @@
                             <p><b>学生コード:</b></p>
                             <p>{!v.student.StudentCode__c}</p>
                             <p><b>姓:</b></p>
-                            <p>{!v.student.FirstName__c}</p>
+                            <p>{!v.student.Firstname__c}</p>
                             <p><b>名:</b></p>
                             <p>{!v.student.Lastname__c}</p>
                             <p><b>生年月日:</b></p>

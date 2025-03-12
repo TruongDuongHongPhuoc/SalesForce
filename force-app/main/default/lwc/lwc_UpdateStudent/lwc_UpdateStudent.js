@@ -95,6 +95,7 @@ export default class Lwc_UpdateStudent extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.sendCloseMessageEvent();
             })
             .catch(error => {
                 this.dispatchEvent(

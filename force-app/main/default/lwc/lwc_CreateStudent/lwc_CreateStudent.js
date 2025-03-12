@@ -70,6 +70,23 @@ export default class Lwc_CreateStudent extends LightningElement {
 
     
     handleSave() {
+       
+
+        
+
+    //     if (!this.validateFirstName(this.firstName)) {
+    //     this.dispatchEvent(
+    //         new ShowToastEvent({
+    //             title: 'Error',
+    //             message: 'First name can only include Roman characters and spaces.',
+    //             variant: 'error'
+    //         })
+    //     );
+    //     return;
+    // }
+
+    this.validateFields();
+
         if (!this.firstName || !this.lastName || !this.gender || !this.selectedClass || !this.learningStatus) {
             this.dispatchEvent(
                 new ShowToastEvent({
@@ -128,4 +145,55 @@ export default class Lwc_CreateStudent extends LightningElement {
         // Stop event from bubbling further
         event.stopPropagation();
     }
+
+
+
+    validateFields() {
+        let isValid = true;
+        const inputs = this.template.querySelectorAll('lightning-input, lightning-combobox');
+       
+        inputs.forEach(input => {
+            if (!input.checkValidity()) { // Dùng checkValidity() thay vì value
+                isValid = false;
+                input.reportValidity();
+            }
+        });
+    
+        if (!this.lastName || !this.firstName || !this.birthday) {
+            this.showToast('Error', 'すべてのフィールドを入力してください。', 'error');
+            isValid = false;
+        }
+    
+        if (this.birthday) {
+            const birthDate = new Date(this.birthday);
+            if (isNaN(birthDate)) { // Kiểm tra nếu ngày không hợp lệ
+                this.showToast('Error', '生年月日が無効です。', 'error');
+                return false;
+            }
+    
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            if (today.getMonth() < birthDate.getMonth() || 
+                (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+    
+            if (age < 18) {
+                let birthdateInput = this.template.querySelector("[data-field='birthdateInput']");
+                console.log("birht date input found as :", birthdateInput);
+                birthdateInput.validity = {valid: false}
+                birthdateInput.setCustomValidity("the student too young to create an account.");
+                birthdateInput.focus();
+                birthdateInput.blur();
+
+                birthdateInput.reportValidity();
+            }
+    
+        }
+        return isValid;
+    }
+    validateBirthDate(){
+        
+    }
+    
 }

@@ -3,7 +3,7 @@ public with sharing class LWC_SearchStudentCtrl {
 
     }
     
-    @AuraEnabled (cacheable = false)
+    @AuraEnabled(cacheable=true)
     public static List<Student__c> getAllStudents() {
         StudentManageSetting__c settings = StudentManageSetting__c.getOrgDefaults();
        // Retrieve the pagination setting
@@ -19,7 +19,7 @@ public with sharing class LWC_SearchStudentCtrl {
         return [
             SELECT Id, Firstname__c, Lastname__c, Gender__c, 
                    Birthday__c, StudentCode__c, LearningStatus__c, 
-                   Class_look__c 
+                   Class_look__r.Name 
             FROM Student__c
             ORDER BY CreatedDate DESC 
             LIMIT :limit_record
@@ -27,13 +27,13 @@ public with sharing class LWC_SearchStudentCtrl {
     } catch (Exception e) {
         throw new AuraHandledException('Error fetching students: ' + e.getMessage());
     }
-    } 
+    }      
     
     @AuraEnabled
     public static List<Student__c> searchStudents(String searchName, String selectedGender, String selectedClass, String searchStudentCode, Date selectedBirthday) {
         try {
             String query = 'SELECT Id, StudentCode__c, Firstname__c, Lastname__c, Birthday__c, ' +
-                           'Gender__c, Class_look__c ' +
+                           'Gender__c, Class_look__r.Name ' +
                            'FROM Student__c WHERE Id != null';
         
             // Dynamically add conditions based on user input
@@ -47,8 +47,9 @@ public with sharing class LWC_SearchStudentCtrl {
             }
             
             if (String.isNotBlank(selectedClass)) {
-                query += ' AND Class_look__c = \'' + String.escapeSingleQuotes(selectedClass) + '\'';
+                query += ' AND Class_look__r.Id = \'' + String.escapeSingleQuotes(selectedClass) + '\'';
             }
+            
             
             if (String.isNotBlank(searchStudentCode)) {
                 query += ' AND StudentCode__c LIKE \'%' + String.escapeSingleQuotes(searchStudentCode) + '%\'';
@@ -76,7 +77,7 @@ public with sharing class LWC_SearchStudentCtrl {
         Map<String, Object> settingsMap = new Map<String, Object>();
         if (settings != null) {
             settingsMap.put('MaxStudentRecord', settings.S_MaxRecord__c);
-            settingsMap.put('PageSize', PageSize);
+            settingsMap.put('PageSize', 10);
         }
         return settingsMap;
     }

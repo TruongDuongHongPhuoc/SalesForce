@@ -65,4 +65,43 @@ public with sharing class LWC_TestCtrl {
                 FROM Semester__c];
     }
 
+    @AuraEnabled
+    public static void InsertStaticData(){
+        try {
+            List<Score__c> scoresToInsert = new List<Score__c>();
+
+// Define the SubjectScore record
+Id subjectScoreId = 'a05WU00000B8KT6YAN';
+
+// Define exam types with example scores
+Map<String, Decimal> examScores = new Map<String, Decimal>{
+            '進捗' => 7.5,   // Progress
+            '実技' => 8.0,   // Practical
+            '中間試験' => 6.5, // Midterm Exam
+            '期末試験' => 9.0  // Final Term Exam
+        };
+
+        // Create Score__c records
+        for (String examType : examScores.keySet()) {
+            Score__c scoreRecord = new Score__c(
+                SubjectScore_look__c = subjectScoreId,
+                ExamType__c = examType,
+                Score__c = examScores.get(examType)
+            );
+            scoresToInsert.add(scoreRecord);
+        }
+
+        // Insert the records
+        if (!scoresToInsert.isEmpty()) {
+            insert scoresToInsert;
+            System.debug('Inserted scores successfully: ' + scoresToInsert);
+        } else {
+            System.debug('No scores to insert.');
+        }
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
 }

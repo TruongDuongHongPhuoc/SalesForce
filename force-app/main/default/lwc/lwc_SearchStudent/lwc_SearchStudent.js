@@ -3,9 +3,9 @@ import { LightningElement, wire,track } from 'lwc';
 import getGenderOptions from '@salesforce/apex/LWC_CreateStudentCtrl.getGenderOptions';
 import getClassOptions from '@salesforce/apex/LWC_CreateStudentCtrl.getClassOptions';
 import deleteStudents from '@salesforce/apex/CMP_SearchStudentCtrl.deleteSelectedStudents';
-import getAllStudents from '@salesforce/apex/CMP_SearchStudentCtrl.getAllStudents';
-import searchStudents from '@salesforce/apex/CMP_SearchStudentCtrl.searchStudents';
-import getPaginationSettign from '@salesforce/apex/CMP_SearchStudentCtrl.getPaginationSettings';
+import getAllStudents from '@salesforce/apex/LWC_SearchStudentCtrl.getAllStudents';
+import searchStudents from '@salesforce/apex/LWC_SearchStudentCtrl.searchStudents';
+import getPaginationSettings from '@salesforce/apex/LWC_SearchStudentCtrl.getPaginationSettings';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 
@@ -59,7 +59,13 @@ export default class Lwc_SearchStudent extends LightningElement {
 
  // disable buttons attribute
  get isDeleteDisabled() {
-    return this.selectedStudents.length === 0;
+    if(this.selectedStudents.length == 0){
+        return true;
+    }else{
+    return false;
+        
+    }
+
 }  
  get isClearDisable(){
     if(this.searchName == '' && this.selectedBirthday == undefined && this.selectedGender == '' && this.selectedClass == '' && this.searchStudentCode == '' && this.selectedStudents.length == 0){
@@ -74,6 +80,8 @@ export default class Lwc_SearchStudent extends LightningElement {
 get isLastPageDisable(){
     return this.currentPage === this.totalPages;
 }
+
+
 
  // END of Attributes
 
@@ -97,6 +105,7 @@ wiredGetAllStudents(result) {
     if (result.data) {
         this.students = result.data.map(student => ({ ...student, isSelected: false }));
         console.log("student length: " + this.students.length);
+        console.log("Student data : " + JSON.stringify(result));
         this.error = undefined;
         this.fetchPaginationSettings();
     } else if (result.error) {
@@ -141,25 +150,26 @@ wiredGetAllStudents(result) {
      }
  }
 
- // get pagination settings
- async fetchPaginationSettings() {
-     try {
-         const data = await getPaginationSettign();
-         if (data) {
-             this.maxStudentRecord = data.MaxStudentRecord;
-             console.log("Page size received from Apex:", data.pageSize);
-             this.pageSize = data.pageSize || 10; // Use 10 as fallback if undefined
-             this.totalPages = Math.ceil(this.students.length / this.pageSize);
-             
-             // call first time update pagination student 
-             this.updatePageStudent();
-             this.getVisiblePages();
-         }
-     } catch (error) {
-         console.error('Error fetching pagination settings:', error);
-     }
- }
- 
+ // Get pagination settings from Apex
+async fetchPaginationSettings() {
+    try {
+        const data = await getPaginationSettings(); // ✅ Fixed function name
+
+        if (data) {
+            this.maxStudentRecord = data.MaxStudentRecord;
+            console.log("Page size received from Apex:", data.PageSize); // ✅ Fixed case sensitivity
+            this.pageSize = data.PageSize || 10; // ✅ Fallback to 10 if undefined
+            this.totalPages = Math.ceil(this.students.length / this.pageSize);
+
+            // Call first-time update pagination student
+            this.updatePageStudent();
+            this.getVisiblePages();
+        }
+    } catch (error) {
+        console.error('Error fetching pagination settings:', error.message);
+    }
+}
+
 
  // SEARCH FUNCTIONS
 
@@ -296,37 +306,55 @@ wiredGetAllStudents(result) {
 
     // Optionally update the "Select All" checkbox status
     this.selectAll = selectedStudents.length === this.display_students.length;
-
+    
     console.log("selected students:" + selectedStudents.length);
 }
 
-    // handle select all displayed student
-    toggleSelectAll() {
-        // Toggle the value of selectAll
-        this.selectAll = !this.selectAll;
-    
-        // Ensure selectedStudents is an array
-        this.selectedStudents = this.selectedStudents || [];
-    
-        // Update selection status for displayed students
-        this.display_students = this.display_students.map(student => {
-            if (this.selectAll) {
-                // Add student ID to selectedStudents if selecting all
-                if (!this.selectedStudents.includes(student.Id)) {
-                    this.selectedStudents.push(student.Id);
-                }
-            } else {
-                // Remove student ID from selectedStudents if unchecking all
-                this.selectedStudents = this.selectedStudents.filter(id => id !== student.Id);
+   // Handle select all displayed students
+toggleSelectAll() {
+    // Toggle the value of selectAll
+    this.selectAll = !this.selectAll;
+
+    // Ensure selectedStudents is an array
+    this.selectedStudents = this.selectedStudents || [];
+
+    // Update selection status for both displayed and original student arrays
+    this.display_students = this.display_students.map(student => {
+        if (this.selectAll) {
+            // Add student ID to selectedStudents if selecting all
+            if (!this.selectedStudents.includes(student.Id)) {
+                this.selectedStudents.push(student.Id);
             }
+        } else {
+            // Remove student ID from selectedStudents if unchecking all
+            this.selectedStudents = this.selectedStudents.filter(id => id !== student.Id);
+        }
+
+        return {
+            ...student,
+            isSelected: this.selectAll
+        };
+    });
+
+    // Ensure the original `students` array is also updated
+    this.students = this.students.map(student => {
+        return {
+            ...student,
+            isSelected: this.display_students.some(displayed => displayed.Id === student.Id && displayed.isSelected)
+        };
+    });
+}
+
     
-            return {
-                ...student,
-                isSelected: this.selectAll
-            };
-        });
-    }
+
+
     clearSelection(){
+        let clearCheckBox = this.template.querySelector("[data-field='checkBoxAll']"); // --> this is table header check box
+        console.log("clear check box", clearCheckBox);
+
+        if(clearCheckBox){
+            clearCheckBox.checked = false;
+        }
 
         this.selectedStudents = [];
          //clear all students 
@@ -403,10 +431,9 @@ async deleteSelectedStudent(event) {
         // Remove the deleted students from the local list of students (if needed)
         this.students = this.students.filter(student => !this.selectedStudents.includes(student.Id));
         this.display_students = [...this.students]; // Update the display list
-
+        this.closeDeleteModal();
         // Optionally refresh the list of students (e.g., if needed)
         this.refreshStudents();
-
     } catch (error) {
         console.error('Error deleting students:', error);
         this.showToast('Error', 'Failed to delete students', 'error');
@@ -433,7 +460,8 @@ async deleteSelectedStudent(event) {
 
 
      this.display_students = this.students.slice(startIndex, endIndex);
-        
+
+     console.log("String fly display students" + JSON.stringify(this.display_students));
  }
 
  getVisiblePages() { 
@@ -452,7 +480,10 @@ async deleteSelectedStudent(event) {
      }
  
      for (let i = startPage; i <= endPage; i++) {
-         visiblePages.push(i);
+        visiblePages.push({
+            page: i,
+            isDisable: i === this.currentPage // Disable if it's the current page
+        });
      }
  
      console.log("Visible pages: " + JSON.stringify(visiblePages));
@@ -538,4 +569,4 @@ async deleteSelectedStudent(event) {
 
  
 
-}   
+}

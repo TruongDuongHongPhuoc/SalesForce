@@ -13,4 +13,6 @@ public with sharing class CMP_DetailStudentCtrl {
         Birthday__c, TotalCredit__c, GPAScore__c, LearningStatus__c,
         Class_look__c FROM Student__c WHERE Id = :studentId LIMIT 1];
     }
+
+   
 }
