@@ -1,5 +1,7 @@
 # Youtube Link Demonstration https://youtu.be/SMfWc6XCMgo
 
+# Some test scenarios, test cases and deflect reports https://docs.google.com/spreadsheets/d/1NJWm_kD1L1cqA8CDq_Xgwk0YZxddvgpmKnGry9p9j8s/edit?usp=sharing
+
 <h1> student management system</h1>
 
 <h2> Main page</h2>
