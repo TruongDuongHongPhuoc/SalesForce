@@ -31,7 +31,6 @@
 
 ![image](https://github.com/user-attachments/assets/f95a2029-b906-4bd9-9e22-e129d124e5da)
 
-<p>Notice: The test is violate one of 7 principle of software testing which is test is not use to prove application isn't not contain bug</p>
 
 <h2>Remove confirmation</h2>
 
